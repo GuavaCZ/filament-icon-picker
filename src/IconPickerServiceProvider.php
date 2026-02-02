@@ -11,7 +11,6 @@ use Guava\IconPicker\Testing\TestsIconPicker;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Storage;
 
 class IconPickerServiceProvider extends PackageServiceProvider
 {
@@ -40,8 +39,6 @@ class IconPickerServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->callAfterResolving(IconFactory::class, function (IconFactory $factory) {
-            Storage::disk('public')->makeDirectory('icon-picker-icons');
-
             $factory->add('icon-picker-icons', [
                 'path' => 'icon-picker-icons',
                 'disk' => 'public',
