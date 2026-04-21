@@ -22,7 +22,7 @@ This can be useful for when you want to customize icons rendered on your fronten
 You can install the package via composer:
 
 ```bash
-composer require guava/filament-icon-picker"
+composer require guava/filament-icon-picker
 ```
 
 Make sure to publish the package assets using:
