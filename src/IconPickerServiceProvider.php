@@ -81,7 +81,7 @@ class IconPickerServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            AlpineComponent::make('icon-picker-component', __DIR__ . '/../resources/dist/components/icon-picker-component.js'),
+            AlpineComponent::make('icon-picker-component', __DIR__ . '/../dist/components/icon-picker-component.js'),
         ];
     }
 

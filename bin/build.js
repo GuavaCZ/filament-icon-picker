@@ -46,5 +46,5 @@ const defaultOptions = {
 compile({
     ...defaultOptions,
     entryPoints: ['./resources/js/components/icon-picker-component.js'],
-    outfile: './resources/dist/components/icon-picker-component.js',
+    outfile: './dist/components/icon-picker-component.js',
 })

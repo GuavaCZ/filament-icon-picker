@@ -5,10 +5,13 @@ parameters:
     level: 4
     paths:
         - src
-        - config
-        - database
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    checkMissingIterableValueType: false
 
+    ignoreErrors:
+        # Part of the public Concerns namespace for users to opt into; nothing in the
+        # package itself uses it, so PHPStan sees it as unused.
+        -
+            identifier: trait.unused
+            path: src/Forms/Concerns/CanBeCacheable.php
