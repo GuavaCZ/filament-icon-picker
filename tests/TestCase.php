@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\IconPicker\Forms\Components\Tests;
+namespace Guava\IconPicker\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
@@ -9,16 +9,17 @@ use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Guava\IconPicker\Forms\Components\IconPickerServiceProvider;
+use Guava\IconPicker\IconPickerServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Livewire\LivewireServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 
-class TestCase extends Orchestra
+abstract class TestCase extends BaseTestCase
 {
     protected function setUp(): void
     {
@@ -31,19 +32,22 @@ class TestCase extends Orchestra
 
     protected function getPackageProviders($app)
     {
+        // Livewire first: Filament's support layer wires into it during boot. Without
+        // BladeHeroicons the factory has no sets and every icon lookup returns null.
         return [
-            ActionsServiceProvider::class,
-            BladeCaptureDirectiveServiceProvider::class,
-            BladeHeroiconsServiceProvider::class,
+            LivewireServiceProvider::class,
             BladeIconsServiceProvider::class,
-            FilamentServiceProvider::class,
+            BladeHeroiconsServiceProvider::class,
+            BladeCaptureDirectiveServiceProvider::class,
+            SupportServiceProvider::class,
+            ActionsServiceProvider::class,
+            SchemasServiceProvider::class,
             FormsServiceProvider::class,
             InfolistsServiceProvider::class,
-            LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
-            SupportServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
+            FilamentServiceProvider::class,
             IconPickerServiceProvider::class,
         ];
     }
@@ -51,10 +55,6 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-icon-picker-pro_table.php.stub';
-        $migration->up();
-        */
+        config()->set('app.key', 'base64:' . base64_encode('guava-icon-picker-testing-key-32'));
     }
 }
