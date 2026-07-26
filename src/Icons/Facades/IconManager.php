@@ -2,10 +2,11 @@
 
 namespace Guava\IconPicker\Icons\Facades;
 
+use Guava\IconPicker\Forms\Components\IconPicker;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Guava\IconPicker\Forms\Components\IconPicker
+ * @see IconPicker
  */
 class IconManager extends Facade
 {

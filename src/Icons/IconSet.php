@@ -15,7 +15,7 @@ class IconSet
 
     private Filesystem $filesystem;
 
-    private ?FilesystemFactory $disks;
+    private FilesystemFactory $disks;
 
     public function __construct(
         protected string $id,
@@ -87,7 +87,7 @@ class IconSet
 
     private function filesystem(?string $disk = null): \Illuminate\Contracts\Filesystem\Filesystem | Filesystem
     {
-        return $this->disks && $disk ? $this->disks->disk($disk) : $this->filesystem;
+        return $disk ? $this->disks->disk($disk) : $this->filesystem;
     }
 
     public static function createFromArray(array $configuration, string $id): static

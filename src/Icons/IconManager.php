@@ -57,7 +57,7 @@ class IconManager
             return $this->getIcons(checkScope: $checkScope)->first(fn (Icon $icon) => $icon->id === $id);
         }
 
-        /** @var IconSet[] $sets */
+        /** @var Collection<string, IconSet> $sets */
         $sets = $this->getSets();
 
         foreach ($sets as $set) {

@@ -71,7 +71,7 @@ class IconColumn extends Column implements HasEmbeddedView
         return $placeholder;
     }
 
-    private function getIconPlaceholder(BackedEnum $placeholder): ?string
+    private function getIconPlaceholder(BackedEnum $placeholder): string
     {
         return generate_icon_html(
             $placeholder,
