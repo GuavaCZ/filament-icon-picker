@@ -1,9 +1,14 @@
 {
     "type": "module",
+    "scripts": {
+        "build": "node bin/build.js",
+        "dev": "node bin/build.js --dev",
+        "build:theme": "tailwindcss -i workbench/resources/css/theme.css -o workbench/dist/theme.css --minify"
+    },
     "devDependencies": {
-        "conventional-changelog-conventionalcommits": "^7.0.2",
+        "@tailwindcss/cli": "^4.3.3",
         "esbuild": "^0.21.3",
-        "semantic-release": "^22.0.5"
+        "tailwindcss": "^4.3.3"
     },
     "dependencies": {
         "fuse.js": "^7.1.0"
