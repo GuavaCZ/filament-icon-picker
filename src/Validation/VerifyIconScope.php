@@ -3,6 +3,7 @@
 namespace Guava\IconPicker\Validation;
 
 use Closure;
+use Guava\IconPicker\Icons\IconSet;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,8 +18,7 @@ class VerifyIconScope implements ValidationRule
         $prefix = str($value)->before('-')->toString();
         $scope = str($value)->after('-')->before('.')->toString();
 
-        // TODO: replace magic value
-        if ($prefix !== '_gfic_icons') {
+        if ($prefix !== IconSet::CUSTOM_PREFIX) {
             return;
         }
 
