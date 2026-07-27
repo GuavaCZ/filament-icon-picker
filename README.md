@@ -1,3 +1,5 @@
+![filament-icon-picker Banner](https://github.com/GuavaCZ/filament-icon-picker/raw/main/.github/banner.png)
+
 # Icon Picker for your filament panels
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/guava/filament-icon-picker.svg?style=flat-square)](https://packagist.org/packages/guava/filament-icon-picker)
