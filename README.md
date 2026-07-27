@@ -3,26 +3,31 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/guava/filament-icon-picker.svg?style=flat-square)](https://packagist.org/packages/guava/filament-icon-picker)
 [![Total Downloads](https://img.shields.io/packagist/dt/guava/filament-icon-picker.svg?style=flat-square)](https://packagist.org/packages/guava/filament-icon-picker)
 
-
-
 This plugin adds a new icon picker form field and a corresponding table column. You can use it to select from any blade-icons kit that you have installed. By default, heroicons are supported since it is shipped with Filament.
 
 This can be useful for when you want to customize icons rendered on your frontend, if you want your users to be able to customize navigation icons, add small icons to their models for easy recognition and similar.
 
+## Documentation
+
+The full documentation is available at [guava.cz](https://guava.cz/developers/packages/filament-icon-picker), and in the [`docs`](docs) directory of this repository.
+
 ## Version compatibility
+
 | Filament version | Plugin version |
-|------------------|:--------------:| 
+|------------------|:--------------:|
 | 2.x              |      1.x       |
 | 3.x              |      2.x       |
 | 4.x              |      3.x       |
 | 5.x              |      4.x       |
+
+For older filament versions, please check the branch of the respective version.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require guava/filament-icon-picker"
+composer require guava/filament-icon-picker
 ```
 
 Make sure to publish the package assets using:
@@ -31,106 +36,34 @@ Make sure to publish the package assets using:
 php artisan filament:assets
 ```
 
-For certain layouts, you might need to update the `payloads.max_calls` setting in your livewire.php config.
+Finally, make sure you have a **custom filament theme** (read [here](https://filamentphp.com/docs/5.x/styling/overview#creating-a-custom-theme) how to create one) and add the following to your **theme.css** file so the CSS is properly built:
 
-Finally, make sure you have a **custom filament theme** (read [here](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) how to create one) and add the following to your **theme.css** file:
-
-This ensures that the CSS is properly built:
 ```css
 @source '../../../../vendor/guava/filament-icon-picker/resources/**/*';
 ```
 
-For older filament versions, please check the branch of the respective version.
+For the remaining setup steps, please see the [installation docs](docs/4.x/02-installation.md).
 
 ## Usage
 
-### Usage in Schemas:
-Add the icon picker to any form schema in your filament panel or livewire component that supports filament forms:
+Add the icon picker to any form schema:
+
 ```php
 use Guava\IconPicker\Forms\Components\IconPicker;
 
 IconPicker::make('icon');
 ```
 
-### Usage in Tables:
-To display the stored icon in your filamen tables, use our IconColumn class:
+And the column to any table:
 
 ```php
 // Make sure this is the correct import, not the filament one
 use Guava\IconPicker\Tables\Columns\IconColumn;
 
-$table
-    ->columns([
-        IconColumn::make('icon'),
-    ])
-    // ...
-;
+IconColumn::make('icon');
 ```
 
-### Usage on the frontend:
-We store the full icon name in the database. This means to use the icon on the frontend, simply treat is as any other static icon.
-
-For example, assuming we saved the icon on our `$category` model under `$icon`, you can render it in your blade view using:
-```php
-<x-icon :name="$category->icon" />
-```
-More information on rendering the icon on the [blade-icons github](https://github.com/blade-ui-kit/blade-icons#default-component).
-
-## Customization
-
-### Search Results View
-Out of the box, we provide three different search result views that you can choose from.
-
-#### Grid View
-This is the default view used. Icons will be shown in a grid with their name underneath the icon.
-
-```php
-IconPicker::make('icon')
-    ->gridSearchResults();
-```
-
-<img width="410" height="598" alt="Screenshot 2025-08-19 at 14 12 10" src="https://github.com/user-attachments/assets/78965823-03b7-48b4-9347-58e1ba693530" />
-
-#### List View
-Icons will be rendered in a list together with the icon's name.
-
-```php
-IconPicker::make('icon')
-    ->listSearchResults();
-```
-
-<img width="414" height="594" alt="Screenshot 2025-08-19 at 14 12 27" src="https://github.com/user-attachments/assets/1ff12789-91fd-4587-aec5-c40bbb089a4f" />
-
-#### Icons View
-Icons will be rendered in a small grid with only the icons visible, optionally configurable to show a tooltip with the icon name.
-
-```php
-IconPicker::make('icon')
-    ->iconsSearchResults()       // With tooltip
-    ->iconsSearchResults(false); // Without tooltip
-```
-
-<img width="417" height="477" alt="Screenshot 2025-08-19 at 14 12 48" src="https://github.com/user-attachments/assets/42a4a50c-3495-4b7f-a9ed-94e3e8b23867" />
-
-### Dropdown
-By default, the icon picker will open a dropdown, where you can search and select the icon. (Very similar to a regular `Select` field in filament).
-
-If you prefer, you can disable the dropdown and then the search and results will be rendered directly beneath the field.
-
-```php
-IconPicker::make('icon')
-    ->dropdown(false);
-```
-
-### Limit sets
-By default, all available icon sets in the system will be available in the icon picker.
-
-If you want, you can limit the sets to only the sets you want, by providing an array of set names:
-
-```php
-IconPicker::make('icon')
-    ->sets(['heroicons']);
-```
+Everything else, including search result views, limiting icon sets and letting your users upload their own icons, is covered in the [documentation](docs/4.x/01-introduction.md).
 
 ## Testing
 
