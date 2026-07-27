@@ -7,6 +7,7 @@ use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Guava\IconPicker\Icons\IconSet;
 use Guava\IconPicker\Testing\TestsIconPicker;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
@@ -40,12 +41,12 @@ class IconPickerServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->callAfterResolving(IconFactory::class, function (IconFactory $factory) {
-            Storage::disk('public')->makeDirectory('icon-picker-icons');
+            Storage::disk('public')->makeDirectory(IconSet::CUSTOM_DIRECTORY);
 
-            $factory->add('icon-picker-icons', [
-                'path' => 'icon-picker-icons',
+            $factory->add(IconSet::CUSTOM_ID, [
+                'path' => IconSet::CUSTOM_DIRECTORY,
                 'disk' => 'public',
-                'prefix' => '_gfic_icons',
+                'prefix' => IconSet::CUSTOM_PREFIX,
             ]);
         });
     }

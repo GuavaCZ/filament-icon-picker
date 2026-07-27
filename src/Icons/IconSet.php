@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Validator;
 
 class IconSet
 {
+    // The set uploaded icons live in. The service provider, the upload action and $custom
+    // below all have to agree - if the id drifts, nothing is custom and scope checks pass.
+    public const CUSTOM_ID = 'icon-picker-icons';
+
+    public const CUSTOM_DIRECTORY = 'icon-picker-icons';
+
+    public const CUSTOM_PREFIX = '_gfic_icons';
+
     public string $label;
 
     private Filesystem $filesystem;
@@ -100,7 +108,7 @@ class IconSet
             'attributes' => $configuration['attributes'] ?? [],
             'paths' => $configuration['paths'] ?? [],
             'disk' => $configuration['disk'] ?? null,
-            'custom' => $id === 'icon-picker-pro-icons',
+            'custom' => $id === static::CUSTOM_ID,
         ]);
     }
 }
