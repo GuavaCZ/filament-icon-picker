@@ -14,6 +14,8 @@ use Guava\IconPicker\Forms\Components\Concerns\CanUseDropdown;
 use Guava\IconPicker\Forms\Components\Concerns\HasSearchResultsView;
 use Guava\IconPicker\Forms\Components\Concerns\HasSets;
 use Guava\IconPicker\Icons\Facades\IconManager;
+use Guava\IconPicker\Icons\Icon;
+use Guava\IconPicker\Icons\IconSet;
 use Guava\IconPicker\Validation\VerifyIcon;
 use Guava\IconPicker\Validation\VerifyIconScope;
 use Illuminate\Support\Collection;
@@ -40,17 +42,35 @@ class IconPicker extends Field
 
         $this
             ->placeholder(__('filament-icon-picker::icon-picker.placeholder'))
-            ->rules(
-                fn (IconPicker $component) => collect([
-                    new VerifyIcon($component),
-                ])
-                    ->when(
-                        $scopedTo = $component->getScopedTo(),
-                        fn (Collection $rules) => $rules->push(new VerifyIconScope($scopedTo)),
-                    )
-                    ->all()
-            )
+            // Scope first, so a foreign icon reports that and not "does not exist". Attached
+            // even without a scope, otherwise unscoped fields accept any scoped icon.
+            ->rules(fn (IconPicker $component) => [
+                new VerifyIconScope($component->getScopedTo()),
+                new VerifyIcon($component),
+            ])
         ;
+    }
+
+    /**
+     * The icon has to exist, come from an allowed set and match the field's scope.
+     */
+    public function resolveIcon(?string $id): ?Icon
+    {
+        if (blank($id)) {
+            return null;
+        }
+
+        $icon = IconManager::getIcon($id, checkScope: true, scope: $this->getScopedTo());
+
+        if (! $icon) {
+            return null;
+        }
+
+        $allowed = $this->getAllowedSets()
+            ->contains(fn (IconSet $set) => $set->getId() === $icon->getSet()->getId())
+        ;
+
+        return $allowed ? $icon : null;
     }
 
     public function getHintActions(): array
@@ -75,7 +95,7 @@ class IconPicker extends Field
     public function getDisplayName(): ?string
     {
         if ($state = $this->getState()) {
-            if ($icon = IconManager::getIcon($state)) {
+            if ($icon = $this->resolveIcon($state)) {
                 return $icon->label;
             }
         }
@@ -98,14 +118,23 @@ class IconPicker extends Field
     #[Renderless]
     public function getIconsJs(?string $set = null): Collection
     {
-        return IconManager::getIcons($set, $this->getScopedTo());
+        // $set comes from the browser, so list the allowed sets and not every registered one.
+        return $this->getAllowedSets()
+            ->when(
+                $set,
+                fn (Collection $sets) => $sets->filter(fn (IconSet $iconSet) => $iconSet->getId() === $set)
+            )
+            ->map(fn (IconSet $iconSet) => $iconSet->getIcons($this->getScopedTo()))
+            ->collapse()
+            ->values()
+        ;
     }
 
     #[ExposedLivewireMethod]
     #[Renderless]
     public function getIconSvgJs(?string $id = null): ?string
     {
-        if (IconManager::getIcon($id, false)) {
+        if ($this->resolveIcon($id)) {
             return generate_icon_html($id)?->toHtml();
         }
 
@@ -116,7 +145,7 @@ class IconPicker extends Field
     #[Renderless]
     public function verifyState(?string $state = null): ?string
     {
-        if ($state && ! IconManager::getIcon($state)) {
+        if ($state && ! $this->resolveIcon($state)) {
             return null;
         }
 
