@@ -47,27 +47,33 @@ class IconManager
         return $this->getSetByPrefix($prefix);
     }
 
-    public function getIcon(?string $id, bool $checkScope = false): ?Icon
+    public function getIcon(?string $id, bool $checkScope = false, ?Model $scope = null): ?Icon
     {
         if ($id === null) {
             return null;
-        }
-
-        if ($checkScope) {
-            return $this->getIcons(checkScope: $checkScope)->first(fn (Icon $icon) => $icon->id === $id);
         }
 
         /** @var Collection<string, IconSet> $sets */
         $sets = $this->getSets();
 
         foreach ($sets as $set) {
-            if (str($id)->startsWith($set->getPrefix())) {
-                return new Icon(
-                    $id,
-                    str($id)->headline()->lower()->ucfirst(),
-                    $set
-                );
+            if (! str($id)->startsWith($set->getPrefix())) {
+                continue;
             }
+
+            // The prefix says nothing about whether a custom icon exists or whose it is, so
+            // list the set. That's one directory - the bundled sets are too big to walk.
+            if ($set->custom) {
+                return $this->getIcons($set, $scope, $checkScope)
+                    ->first(fn (Icon $icon) => $icon->id === $id)
+                ;
+            }
+
+            return new Icon(
+                $id,
+                str($id)->headline()->lower()->ucfirst(),
+                $set
+            );
         }
 
         return null;
