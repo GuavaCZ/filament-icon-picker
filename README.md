@@ -11,7 +11,7 @@ This can be useful for when you want to customize icons rendered on your fronten
 
 ## Documentation
 
-The full documentation is available at [guava.cz](https://guava.cz/developers/packages/filament-icon-picker), and in the [`docs`](docs) directory of this repository.
+The full documentation is available at [guava.cz](https://guava.cz/developers/packages/filament-icon-picker).
 
 ## Version compatibility
 
@@ -44,7 +44,7 @@ Finally, make sure you have a **custom filament theme** (read [here](https://fil
 @source '../../../../vendor/guava/filament-icon-picker/resources/**/*';
 ```
 
-For the remaining setup steps, please see the [installation docs](docs/4.x/02-installation.md).
+For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/02-installation).
 
 ## Usage
 
@@ -65,7 +65,7 @@ use Guava\IconPicker\Tables\Columns\IconColumn;
 IconColumn::make('icon');
 ```
 
-Everything else, including search result views, limiting icon sets and letting your users upload their own icons, is covered in the [documentation](docs/4.x/01-introduction.md).
+Everything else, including search result views, limiting icon sets and letting your users upload their own icons, is covered in the [documentation](https://guava.cz/developers/packages/filament-icon-picker).
 
 ## Testing
 
