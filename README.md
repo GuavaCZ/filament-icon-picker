@@ -44,7 +44,7 @@ Finally, make sure you have a **custom filament theme** (read [here](https://fil
 @source '../../../../vendor/guava/filament-icon-picker/resources/**/*';
 ```
 
-For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/02-installation).
+For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/installation).
 
 ## Usage
 
