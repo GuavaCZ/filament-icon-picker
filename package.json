@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "@tailwindcss/cli": "^4.3.3",
-        "esbuild": "^0.21.3",
+        "esbuild": "^0.28.1",
         "tailwindcss": "^4.3.3"
     },
     "dependencies": {
