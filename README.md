@@ -11,7 +11,7 @@ This can be useful for when you want to customize icons rendered on your fronten
 
 ## Documentation
 
-The full documentation is available at [guava.cz](https://guava.cz/developers/packages/filament-icon-picker).
+The full documentation is available at [guava.cz](https://guava.cz/developers/packages/filament-icon-picker?ref=github&utm_campaign=icon-picker).
 
 ## Version compatibility
 
@@ -44,7 +44,7 @@ Finally, make sure you have a **custom filament theme** (read [here](https://fil
 @source '../../../../vendor/guava/filament-icon-picker/resources/**/*';
 ```
 
-For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/installation).
+For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/installation?ref=github&utm_campaign=icon-picker).
 
 ## Usage
 
