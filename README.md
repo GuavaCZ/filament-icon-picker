@@ -1,4 +1,4 @@
-![filament-icon-picker Banner](https://github.com/GuavaCZ/filament-icon-picker/raw/main/.github/banner.png)
+<img src="https://github.com/GuavaCZ/filament-icon-picker/raw/main/.github/banner.png" alt="filament-icon-picker Banner" class="filament-hidden">
 
 # Icon Picker for your filament panels
 
