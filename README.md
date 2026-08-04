@@ -44,6 +44,12 @@ Finally, make sure you have a **custom filament theme** (read [here](https://fil
 @source '../../../../vendor/guava/filament-icon-picker/resources/**/*';
 ```
 
+The package serves icons through two automatically registered endpoints (`/_icon-picker/index` and `/_icon-picker/svgs`), secured by an encrypted per-field token. To tweak caching, the route prefix or middleware, publish the config file:
+
+```bash
+php artisan vendor:publish --tag=filament-icon-picker-config
+```
+
 For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/installation?ref=github&utm_campaign=icon-picker).
 
 ## Usage
