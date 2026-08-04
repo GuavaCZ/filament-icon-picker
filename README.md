@@ -20,7 +20,9 @@ The full documentation is available at [guava.cz](https://guava.cz/developers/pa
 | 2.x              |      1.x       |
 | 3.x              |      2.x       |
 | 4.x              |      3.x       |
-| 5.x              |      4.x       |
+| 5.x              |    4.x, 5.x    |
+
+Both 4.x and 5.x run on filament 5. 5.x is the recommended version, it contains several performance improvements. See the [upgrade guide](https://guava.cz/developers/packages/filament-icon-picker/5.x/upgrading?ref=github&utm_campaign=icon-picker).
 
 For older filament versions, please check the branch of the respective version.
 
@@ -50,7 +52,7 @@ The package serves icons through two automatically registered endpoints (`/_icon
 php artisan vendor:publish --tag=filament-icon-picker-config
 ```
 
-For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/4.x/installation?ref=github&utm_campaign=icon-picker).
+For the remaining setup steps, please see the [installation docs](https://guava.cz/developers/packages/filament-icon-picker/5.x/installation?ref=github&utm_campaign=icon-picker).
 
 ## Usage
 
