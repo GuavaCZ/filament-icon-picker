@@ -11,6 +11,6 @@
         "tailwindcss": "^4.3.3"
     },
     "dependencies": {
-        "fuse.js": "^7.1.0"
+        "@leeoniya/ufuzzy": "^1.0.19"
     }
 }
