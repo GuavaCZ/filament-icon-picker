@@ -81,7 +81,7 @@ it('refuses to render another record\'s custom icon', function () {
 
     $id = '_gfic_icons-' . scopeOf($this->otherPost) . '.secret';
 
-    expect($field->getIconSvgJs($id))->toBeNull()
+    expect(fetchIconSvg($field, $id))->toBeNull()
         ->and($field->verifyState($id))->toBeNull()
         ->and($field->resolveIcon($id))->toBeNull()
     ;
@@ -98,7 +98,7 @@ it('renders a custom icon from its own scope', function () {
     $id = '_gfic_icons-' . scopeOf($this->post) . '.mine';
 
     expect($field->resolveIcon($id))->not->toBeNull()
-        ->and($field->getIconSvgJs($id))->toContain('<svg')
+        ->and(fetchIconSvg($field, $id))->toContain('<svg')
     ;
 });
 
@@ -109,7 +109,7 @@ it('refuses a scoped custom icon on a field with no scope', function () {
     $id = '_gfic_icons-' . scopeOf($this->post) . '.mine';
 
     expect($field->resolveIcon($id))->toBeNull()
-        ->and($field->getIconSvgJs($id))->toBeNull()
+        ->and(fetchIconSvg($field, $id))->toBeNull()
     ;
 });
 
@@ -125,7 +125,7 @@ it('refuses an icon from a set the field does not offer', function () {
     $field = IconPicker::make('icon')->sets(['not-a-registered-set']);
 
     expect($field->resolveIcon('heroicon-o-academic-cap'))->toBeNull()
-        ->and($field->getIconSvgJs('heroicon-o-academic-cap'))->toBeNull()
+        ->and(fetchIconSvg($field, 'heroicon-o-academic-cap'))->toBeNull()
         ->and($field->verifyState('heroicon-o-academic-cap'))->toBeNull()
     ;
 });
@@ -133,9 +133,7 @@ it('refuses an icon from a set the field does not offer', function () {
 it('does not list icons from a set the field does not offer', function () {
     $field = IconPicker::make('icon')->sets(['not-a-registered-set']);
 
-    expect($field->getIconsJs())->toBeEmpty()
-        ->and($field->getIconsJs('heroicons'))->toBeEmpty()
-    ;
+    expect(fetchIconIndex($field)['icons'])->toBeEmpty();
 });
 
 it('does not offer custom icons while uploads are disabled', function () {
@@ -143,7 +141,8 @@ it('does not offer custom icons while uploads are disabled', function () {
 
     $field = IconPicker::make('icon');
 
-    expect($field->getIconsJs()->contains(fn ($icon) => $icon->custom))->toBeFalse()
+    // The custom flag is the fourth element of each index tuple.
+    expect(collect(fetchIconIndex($field)['icons'])->contains(fn (array $icon) => $icon[3] === 1))->toBeFalse()
         ->and($field->resolveIcon('_gfic_icons-unscoped.logo'))->toBeNull()
     ;
 });

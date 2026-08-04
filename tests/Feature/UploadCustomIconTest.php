@@ -174,6 +174,6 @@ it('makes the uploaded icon resolvable through the field', function () {
     ;
 
     expect($field->resolveIcon($id))->not->toBeNull()
-        ->and($field->getIconSvgJs($id))->toContain('<svg')
+        ->and(fetchIconSvg($field, $id))->toContain('<svg')
     ;
 });

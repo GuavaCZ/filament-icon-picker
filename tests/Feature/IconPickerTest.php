@@ -75,24 +75,20 @@ it('offers nothing when restricted to a set that is not registered', function ()
     expect(IconPicker::make('icon')->sets(['not-registered'])->getAllowedSets())->toBeEmpty();
 });
 
-it('lists icons through the livewire bridge', function () {
-    $icons = IconPicker::make('icon')->getIconsJs('heroicons');
+it('lists icons through the index endpoint', function () {
+    $index = fetchIconIndex(IconPicker::make('icon')->sets(['heroicons']));
 
-    expect($icons)->not->toBeEmpty();
-});
-
-it('reports the set of the current state through the livewire bridge', function () {
-    expect(IconPicker::make('icon')->getSetJs('heroicon-o-beaker'))->toBe('heroicons')
-        ->and(IconPicker::make('icon')->getSetJs(null))->toBeNull()
+    expect($index['icons'])->not->toBeEmpty()
+        ->and(collect($index['sets'])->pluck('id')->all())->toBe(['heroicons'])
     ;
 });
 
-it('renders svg markup for a known icon through the livewire bridge', function () {
-    expect(IconPicker::make('icon')->getIconSvgJs('heroicon-o-academic-cap'))
+it('renders svg markup for a known icon through the svg endpoint', function () {
+    expect(fetchIconSvg(IconPicker::make('icon'), 'heroicon-o-academic-cap'))
         ->toContain('<svg')
     ;
 });
 
-it('renders no markup for an unknown icon through the livewire bridge', function () {
-    expect(IconPicker::make('icon')->getIconSvgJs('not-a-registered-set-star'))->toBeNull();
+it('renders no markup for an unknown icon through the svg endpoint', function () {
+    expect(fetchIconSvg(IconPicker::make('icon'), 'not-a-registered-set-star'))->toBeNull();
 });

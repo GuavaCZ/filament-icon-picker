@@ -4,7 +4,6 @@ namespace Guava\IconPicker\Forms\Components;
 
 use Filament\Forms\Components\Concerns\CanBeSearchable;
 use Filament\Forms\Components\Field;
-use Filament\Support\Components\Attributes\ExposedLivewireMethod;
 use Filament\Support\Concerns\HasPlaceholder;
 use Guava\IconPicker\Actions\UploadCustomIcon;
 use Guava\IconPicker\Forms\Components\Concerns\CanBeScopedToModel;
@@ -13,15 +12,13 @@ use Guava\IconPicker\Forms\Components\Concerns\CanUploadCustomIcons;
 use Guava\IconPicker\Forms\Components\Concerns\CanUseDropdown;
 use Guava\IconPicker\Forms\Components\Concerns\HasSearchResultsView;
 use Guava\IconPicker\Forms\Components\Concerns\HasSets;
+use Guava\IconPicker\Http\PickerToken;
 use Guava\IconPicker\Icons\Facades\IconManager;
 use Guava\IconPicker\Icons\Icon;
 use Guava\IconPicker\Icons\IconSet;
+use Guava\IconPicker\Support\IconScope;
 use Guava\IconPicker\Validation\VerifyIcon;
 use Guava\IconPicker\Validation\VerifyIconScope;
-use Illuminate\Support\Collection;
-use Livewire\Attributes\Renderless;
-
-use function Filament\Support\generate_icon_html;
 
 class IconPicker extends Field
 {
@@ -103,46 +100,6 @@ class IconPicker extends Field
         return null;
     }
 
-    #[ExposedLivewireMethod]
-    #[Renderless]
-    public function getSetJs(?string $state = null): ?string
-    {
-        if ($state) {
-            return IconManager::getSetFromIcon($state)?->getId();
-        }
-
-        return null;
-    }
-
-    #[ExposedLivewireMethod]
-    #[Renderless]
-    public function getIconsJs(?string $set = null): Collection
-    {
-        // $set comes from the browser, so list the allowed sets and not every registered one.
-        return $this->getAllowedSets()
-            ->when(
-                $set,
-                fn (Collection $sets) => $sets->filter(fn (IconSet $iconSet) => $iconSet->getId() === $set)
-            )
-            ->map(fn (IconSet $iconSet) => $iconSet->getIcons($this->getScopedTo()))
-            ->collapse()
-            ->values()
-        ;
-    }
-
-    #[ExposedLivewireMethod]
-    #[Renderless]
-    public function getIconSvgJs(?string $id = null): ?string
-    {
-        if ($this->resolveIcon($id)) {
-            return generate_icon_html($id)?->toHtml();
-        }
-
-        return null;
-    }
-
-    #[ExposedLivewireMethod]
-    #[Renderless]
     public function verifyState(?string $state = null): ?string
     {
         if ($state && ! $this->resolveIcon($state)) {
@@ -150,5 +107,28 @@ class IconPicker extends Field
         }
 
         return $state;
+    }
+
+    /**
+     * Authorizes the picker endpoints for this field's sets and scope.
+     */
+    public function getPickerToken(): string
+    {
+        return PickerToken::issue($this);
+    }
+
+    /**
+     * Stable identity of the field's icon context. Pickers sharing it share
+     * one client-side index fetch; the token itself differs on every render.
+     */
+    public function getClientCacheKey(): string
+    {
+        $sets = $this->getAllowedSets()
+            ->map(fn (IconSet $set) => $set->getId())
+            ->sort()
+            ->implode(',')
+        ;
+
+        return md5($sets . '|' . IconScope::id($this->getScopedTo()));
     }
 }

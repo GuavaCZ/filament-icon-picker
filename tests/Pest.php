@@ -1,5 +1,6 @@
 <?php
 
+use Guava\IconPicker\Forms\Components\IconPicker;
 use Guava\IconPicker\Tests\Fixtures\Post;
 use Guava\IconPicker\Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
@@ -25,4 +26,27 @@ function putCustomIcon(string $scopeId, string $name): void
 function scopeOf(Post $post): string
 {
     return md5("{$post->getMorphClass()}::{$post->getKey()}");
+}
+
+/**
+ * Fetches one icon's svg through the batch endpoint, as the client would.
+ */
+function fetchIconSvg(IconPicker $field, string $id): ?string
+{
+    $response = test()->getJson(route('guava-icon-picker.svgs', [
+        'token' => $field->getPickerToken(),
+        'ids' => [$id],
+    ]))->assertOk();
+
+    return $response->json('svgs')[$id] ?? null;
+}
+
+/**
+ * Fetches the field's icon index through the endpoint, as the client would.
+ */
+function fetchIconIndex(IconPicker $field): array
+{
+    return test()->getJson(route('guava-icon-picker.index', [
+        'token' => $field->getPickerToken(),
+    ]))->assertOk()->json();
 }

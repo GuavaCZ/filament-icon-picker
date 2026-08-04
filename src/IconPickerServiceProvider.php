@@ -30,6 +30,7 @@ class IconPickerServiceProvider extends PackageServiceProvider
          */
         $package->name(static::$name)
             ->hasConfigFile()
+            ->hasRoute('web')
         ;
 
         if (file_exists($package->basePath('/../resources/lang'))) {

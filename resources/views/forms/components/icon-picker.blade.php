@@ -28,18 +28,10 @@
                 displayName: @js($displayName),
                 isDropdown: @js($isDropdown),
                 shouldCloseOnSelect: @js($shouldCloseOnSelect),
-                getSetUsing: async(state) => {
-                    return await $wire.callSchemaComponentMethod(@js($key), 'getSetJs', { state })
-                },
-                getIconsUsing: async (set) => {
-                    return await $wire.callSchemaComponentMethod(@js($key), 'getIconsJs', { set })
-                },
-                getIconSvgUsing: async(id) => {
-                    return await $wire.callSchemaComponentMethod(@js($key), 'getIconSvgJs', { id })
-                },
-                verifyStateUsing: async(state) => {
-                    return await $wire.callSchemaComponentMethod(@js($key), 'verifyState', { state })
-                }
+                token: @js($field->getPickerToken()),
+                cacheKey: @js($field->getClientCacheKey()),
+                indexUrl: @js(route('guava-icon-picker.index')),
+                svgUrl: @js(route('guava-icon-picker.svgs')),
             })"
         {{ $getExtraAttributeBag()
             ->class([
