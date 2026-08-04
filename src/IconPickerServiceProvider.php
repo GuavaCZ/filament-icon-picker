@@ -7,6 +7,7 @@ use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Guava\IconPicker\Icons\IconManager;
 use Guava\IconPicker\Icons\IconSet;
 use Guava\IconPicker\Testing\TestsIconPicker;
 use Livewire\Features\SupportTesting\Testable;
@@ -27,7 +28,9 @@ class IconPickerServiceProvider extends PackageServiceProvider
          *
          * More info: https://github.com/spatie/laravel-package-tools
          */
-        $package->name(static::$name);
+        $package->name(static::$name)
+            ->hasConfigFile()
+        ;
 
         if (file_exists($package->basePath('/../resources/lang'))) {
             $package->hasTranslations();
@@ -40,6 +43,8 @@ class IconPickerServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->singleton(IconManager::class);
+
         $this->callAfterResolving(IconFactory::class, function (IconFactory $factory) {
             Storage::disk('public')->makeDirectory(IconSet::CUSTOM_DIRECTORY);
 

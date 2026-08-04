@@ -27,16 +27,6 @@ function slugs(): object
     };
 }
 
-function putCustomIcon(string $scopeId, string $name): void
-{
-    Storage::disk('public')->put("icon-picker-icons/{$scopeId}/{$name}.svg", '<svg xmlns="http://www.w3.org/2000/svg"/>');
-}
-
-function scopeOf(Post $post): string
-{
-    return md5("{$post->getMorphClass()}::{$post->getKey()}");
-}
-
 beforeEach(function () {
     Storage::fake('public');
 

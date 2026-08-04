@@ -1,6 +1,8 @@
 <?php
 
+use Guava\IconPicker\Tests\Fixtures\Post;
 use Guava\IconPicker\Tests\TestCase;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,3 +16,13 @@ use Guava\IconPicker\Tests\TestCase;
 */
 
 uses(TestCase::class)->in('Feature', 'Unit');
+
+function putCustomIcon(string $scopeId, string $name): void
+{
+    Storage::disk('public')->put("icon-picker-icons/{$scopeId}/{$name}.svg", '<svg xmlns="http://www.w3.org/2000/svg"/>');
+}
+
+function scopeOf(Post $post): string
+{
+    return md5("{$post->getMorphClass()}::{$post->getKey()}");
+}

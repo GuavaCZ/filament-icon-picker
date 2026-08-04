@@ -2,12 +2,13 @@
 
 namespace Guava\IconPicker\Icons;
 
-use Guava\IconPicker\Validation\VerifyIconScope;
+use Closure;
+use Guava\IconPicker\Support\IconScope;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class IconSet
 {
@@ -53,11 +54,34 @@ class IconSet
         return $this->prefix;
     }
 
-    public function getIcons(?Model $scopedTo = null, bool $checkScopes = true): Collection
+    public function getIcons(Model | string | null $scopedTo = null, bool $checkScopes = true): Collection
     {
-        $icons = collect();
+        $scopeId = IconScope::id($scopedTo);
+
+        return collect($this->remember(
+            $this->cacheKey($scopeId, $checkScopes),
+            fn (): array => $this->listIcons($scopeId, $checkScopes)
+        ))->map(fn (array $icon) => new Icon($icon['id'], $icon['name'], $this));
+    }
+
+    public function forgetCachedIcons(Model | string | null $scope = null): void
+    {
+        $scopeId = IconScope::id($scope);
+
+        Cache::forget($this->cacheKey($scopeId, true));
+        Cache::forget($this->cacheKey($scopeId, false));
+    }
+
+    /**
+     * @return array<int, array{id: string, name: string}>
+     */
+    protected function listIcons(string $scopeId, bool $checkScopes): array
+    {
+        $icons = [];
+
         foreach ($this->paths as $path) {
             $files = $this->filesystem($this->disk)->allFiles($path);
+
             foreach ($files as $file) {
                 if (is_string($file)) {
                     $file = new \SplFileInfo($file);
@@ -73,24 +97,46 @@ class IconSet
                 $id = "$this->prefix-$name";
 
                 if ($this->custom && $checkScopes) {
-                    if (! Validator::make(['icon' => $id], ['icon' => new VerifyIconScope($scopedTo)])->passes()) {
+                    if ((string) $name->before('.') !== $scopeId) {
                         continue;
                     }
                     $name = $name->after('.');
                 }
 
-                //                if ($allowedIcons && !in_array($filename, $allowedIcons)) {
-                //                    continue;
-                //                }
-                //                if ($disallowedIcons && in_array($filename, $disallowedIcons)) {
-                //                    continue;
-                //                }
-
-                $icons->push(new Icon($id, $name, $this));
+                $icons[] = ['id' => $id, 'name' => (string) $name];
             }
         }
 
         return $icons;
+    }
+
+    /**
+     * Cached as plain arrays - Icon objects hold filesystem instances and
+     * cannot be serialized. Non-custom listings are scope-independent.
+     */
+    protected function cacheKey(string $scopeId, bool $checkScopes): string
+    {
+        $prefix = config('filament-icon-picker.cache.prefix', 'guava-icon-picker');
+        $key = "{$prefix}.set.{$this->id}";
+
+        if ($this->custom) {
+            $key .= $checkScopes ? ".{$scopeId}" : '.all';
+        }
+
+        return $key;
+    }
+
+    protected function remember(string $key, Closure $callback): array
+    {
+        if (! config('filament-icon-picker.cache.enabled', true)) {
+            return $callback();
+        }
+
+        return Cache::remember(
+            $key,
+            now()->add(config('filament-icon-picker.cache.duration', '7 days')),
+            $callback
+        );
     }
 
     private function filesystem(?string $disk = null): \Illuminate\Contracts\Filesystem\Filesystem | Filesystem

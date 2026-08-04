@@ -56,5 +56,7 @@ abstract class TestCase extends BaseTestCase
     {
         config()->set('database.default', 'testing');
         config()->set('app.key', 'base64:' . base64_encode('guava-icon-picker-testing-key-32'));
+        // The array store keeps cached icon listings isolated per test.
+        config()->set('cache.default', 'array');
     }
 }

@@ -103,6 +103,8 @@ class UploadCustomIcon extends Action
                     ->required(),
             ])
             ->after(function (array $data, IconPicker $component): void {
+                IconManager::forgetCustomIcons($component->getScopedTo());
+
                 $component->state($this->getBladeIconId(
                     data_get($data, 'label'),
                     $component->getScopedTo()
