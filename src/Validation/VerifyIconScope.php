@@ -4,13 +4,14 @@ namespace Guava\IconPicker\Validation;
 
 use Closure;
 use Guava\IconPicker\Icons\IconSet;
+use Guava\IconPicker\Support\IconScope;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Model;
 
 class VerifyIconScope implements ValidationRule
 {
     public function __construct(
-        private ?Model $scopedTo,
+        private Model | string | null $scopedTo,
     ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -26,17 +27,8 @@ class VerifyIconScope implements ValidationRule
         if (empty($scope)) {
             $fail('Scope missing for custom icon.');
         }
-        if ($this->getScopeId($this->scopedTo) !== $scope) {
+        if (IconScope::id($this->scopedTo) !== $scope) {
             $fail('Unauthorized icon scope.');
         }
-    }
-
-    private function getScopeId(?Model $model): string
-    {
-        if ($model === null) {
-            return 'unscoped';
-        }
-
-        return md5("{$model->getMorphClass()}::{$model->getKey()}");
     }
 }

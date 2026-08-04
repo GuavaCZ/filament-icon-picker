@@ -10,10 +10,10 @@ use Filament\Schemas\Components\Utilities\Get;
 use Guava\IconPicker\Forms\Components\IconPicker;
 use Guava\IconPicker\Icons\Facades\IconManager;
 use Guava\IconPicker\Icons\IconSet;
+use Guava\IconPicker\Support\IconScope;
 use Guava\IconPicker\Support\SvgSanitizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Stringable;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UploadCustomIcon extends Action
@@ -41,18 +41,7 @@ class UploadCustomIcon extends Action
                     ->acceptedFileTypes(['image/svg+xml'])
                     ->maxSize(static::MAX_FILE_SIZE)
                     ->disk('public')
-                    ->directory(function () use ($component): string {
-                        $directory = str(IconSet::CUSTOM_DIRECTORY);
-
-                        if ($model = $component->getScopedTo()) {
-                            $scopeId = md5("{$model->getMorphClass()}::{$model->getKey()}");
-                            $directory = $directory->append(DIRECTORY_SEPARATOR, $scopeId);
-                        } else {
-                            $directory = $directory->append(DIRECTORY_SEPARATOR, 'unscoped');
-                        }
-
-                        return $directory;
-                    })
+                    ->directory(fn (): string => IconSet::CUSTOM_DIRECTORY . DIRECTORY_SEPARATOR . IconScope::id($component->getScopedTo()))
                     ->getUploadedFileNameForStorageUsing(
                         fn (Get $get): string => $this->getIconName($get('label')) . '.svg'
                     )
@@ -138,15 +127,7 @@ class UploadCustomIcon extends Action
     protected function getBladeIconId(string $label, ?Model $scope): string
     {
         return str($this->getIconName($label))
-            ->when(
-                $scope,
-                function (Stringable $string) use ($scope) {
-                    $scopeId = md5("{$scope->getMorphClass()}::{$scope->getKey()}");
-
-                    return $string->prepend("$scopeId.");
-                },
-                fn (Stringable $string) => $string->prepend('unscoped.')
-            )
+            ->prepend(IconScope::id($scope) . '.')
             ->prepend(IconSet::CUSTOM_PREFIX . '-')
         ;
     }
