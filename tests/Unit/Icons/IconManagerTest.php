@@ -30,8 +30,12 @@ it('returns null for a null icon', function () {
     expect(IconManager::getIcon(null))->toBeNull();
 });
 
-it('derives a human readable label from the icon id', function () {
-    expect(IconManager::getIcon('heroicon-o-academic-cap')->label)->toBe('Heroicon o academic cap');
+it('derives a human readable label from the icon name', function () {
+    expect(IconManager::getIcon('heroicon-o-academic-cap')->label)->toBe('O academic cap');
+});
+
+it('returns null for an icon whose file does not exist', function () {
+    expect(IconManager::getIcon('heroicon-o-this-icon-does-not-exist'))->toBeNull();
 });
 
 it('finds the set an icon belongs to from its prefix', function () {
