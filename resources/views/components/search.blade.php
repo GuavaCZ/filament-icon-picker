@@ -18,6 +18,7 @@
     x-cloak
 >
     <div class="flex flex-col gap-4 @container">
+        @if(count($sets) > 1)
         <x-filament::input.wrapper>
             <x-filament::input.select x-bind="setSelect" x-model="set">
                 <option value="">@lang('filament-icon-picker::icon-picker.all-icons')</option>
@@ -25,8 +26,8 @@
                     <option value="{{$set->getId()}}">{{$set->label}}</option>
                 @endforeach
             </x-filament::input.select>
-
         </x-filament::input.wrapper>
+        @endif
 
         <x-filament::input.wrapper>
             <x-filament::input x-bind="searchInput" :placeholder="$searchPrompt"></x-filament::input>
