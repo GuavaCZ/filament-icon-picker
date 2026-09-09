@@ -75,6 +75,21 @@ IconColumn::make('icon');
 
 Everything else, including search result views, limiting icon sets and letting your users upload their own icons, is covered in the [documentation](https://guava.cz/developers/packages/filament-icon-picker).
 
+## Translations
+
+Translations use the `guava-icon-picker` namespace to avoid collisions with other icon-picker packages.
+Publish them with:
+
+```bash
+php artisan vendor:publish --tag=guava-icon-picker-translations
+```
+
+To customize translations, edit `lang/vendor/guava-icon-picker/{locale}` (or
+`resources/lang/vendor/guava-icon-picker/{locale}` if your application uses that language directory).
+If you previously published Guava translations under `vendor/filament-icon-picker`, copy your Guava
+overrides to `vendor/guava-icon-picker`. The old namespace and publishing tag remain registered for
+existing application translation calls, but the package's own components now use the unique namespace.
+
 ## Testing
 
 ```bash

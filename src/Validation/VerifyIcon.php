@@ -14,7 +14,7 @@ class VerifyIcon implements ValidationRule
     {
         // Not IconManager::getIcon() - that matches on the prefix alone.
         if (! is_string($value) || ! $this->iconPicker->resolveIcon($value)) {
-            $fail(__('filament-icon-picker::validation.icon-does-not-exist'));
+            $fail(__('guava-icon-picker::validation.icon-does-not-exist'));
         }
     }
 }

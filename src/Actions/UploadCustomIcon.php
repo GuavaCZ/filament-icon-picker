@@ -31,13 +31,13 @@ class UploadCustomIcon extends Action
     public function configure(): static
     {
         return $this
-            ->label(__('filament-icon-picker::actions.upload-custom-icon.label'))
+            ->label(__('guava-icon-picker::actions.upload-custom-icon.label'))
             ->icon('heroicon-c-arrow-up-tray')
             ->modal()
             ->modalIcon(fn (UploadCustomIcon $action) => $action->getIcon())
             ->schema(fn (IconPicker $component) => [
                 FileUpload::make('file')
-                    ->label(__('filament-icon-picker::actions.upload-custom-icon.schema.file.label'))
+                    ->label(__('guava-icon-picker::actions.upload-custom-icon.schema.file.label'))
                     ->acceptedFileTypes(['image/svg+xml'])
                     ->maxSize(static::MAX_FILE_SIZE)
                     ->disk('public')
@@ -75,7 +75,7 @@ class UploadCustomIcon extends Action
                                 }
 
                                 if (app(SvgSanitizer::class)->sanitize((string) $upload->get()) === null) {
-                                    $fail(__('filament-icon-picker::validation.invalid-svg'));
+                                    $fail(__('guava-icon-picker::validation.invalid-svg'));
                                 }
                             }
                         },
@@ -83,7 +83,7 @@ class UploadCustomIcon extends Action
                     ->required(),
 
                 TextInput::make('label')
-                    ->label(__('filament-icon-picker::actions.upload-custom-icon.schema.label.label'))
+                    ->label(__('guava-icon-picker::actions.upload-custom-icon.schema.label.label'))
                     ->extraAlpineAttributes([
                         'x-on:input' => '$event.target.value = $event.target.value.replace(/[^a-zA-Z0-9\s]/g, \'\')',
                     ])
@@ -93,12 +93,12 @@ class UploadCustomIcon extends Action
                             $id = $this->getBladeIconId($value, $scope = $component->getScopedTo());
 
                             if (IconManager::getIcon($id, checkScope: true, scope: $scope)) {
-                                $fail(__('filament-icon-picker::validation.icon-already-exists'));
+                                $fail(__('guava-icon-picker::validation.icon-already-exists'));
                             }
                         },
                     ])
                     ->validationMessages([
-                        'regex' => __('filament-icon-picker::validation.invalid-label'),
+                        'regex' => __('guava-icon-picker::validation.invalid-label'),
                     ])
                     ->required(),
             ])

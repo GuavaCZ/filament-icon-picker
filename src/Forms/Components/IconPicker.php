@@ -38,7 +38,7 @@ class IconPicker extends Field
         parent::setUp();
 
         $this
-            ->placeholder(__('filament-icon-picker::icon-picker.placeholder'))
+            ->placeholder(__('guava-icon-picker::icon-picker.placeholder'))
             // Scope first, so a foreign icon reports that and not "does not exist". Attached
             // even without a scope, otherwise unscoped fields accept any scoped icon.
             ->rules(fn (IconPicker $component) => [

@@ -59,6 +59,14 @@ class IconPickerServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'guava-icon-picker');
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../resources/lang' => lang_path('vendor/guava-icon-picker'),
+            ], 'guava-icon-picker-translations');
+        }
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
