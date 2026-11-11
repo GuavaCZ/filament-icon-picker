@@ -6,7 +6,7 @@
         "build:theme": "tailwindcss -i workbench/resources/css/theme.css -o workbench/dist/theme.css --minify"
     },
     "devDependencies": {
-        "@tailwindcss/cli": "^4.3.3",
+        "@tailwindcss/cli": "^4.3.4",
         "esbuild": "^0.28.1",
         "tailwindcss": "^4.3.3"
     },
